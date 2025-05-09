@@ -1,58 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Traditional Nepali Recipe Generator</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traditional Nepali Recipe Generator</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-  <div class="container py-4">
-    <h1 class="text-center mb-4">Traditional Nepali Recipe Generator</h1>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">Nepali Recipe Generator</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#recipes">Recipes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#addRecipe">Add Recipe</a></li>
+                    <li class="nav-item"><button class="btn btn-light" id="viewFavoritesBtn">❤️ View Favorites</button></li>
+                    <li class="nav-item">
+                        <button id="darkModeToggle" class="btn btn-outline-light ms-2">🌙 Dark Mode</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-    <div class="mb-3">
-      <label for="ingredients" class="form-label">Enter Ingredients (comma-separated):</label>
-      <input type="text" class="form-control" id="ingredients" placeholder="e.g., rice, lentils, tomato" />
+    <!-- Hero Section -->
+    <header class="bg-image text-white text-center py-5">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Discover Authentic Nepali Flavors</h1>
+            <p class="lead">Explore traditional recipes passed down through generations.</p>
+            <a href="#recipes" class="btn btn-light btn-lg mt-3">Browse Recipes</a>
+        </div>
+    </header>
+
+    <section id="recipes" class="container my-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold">Popular Recipes</h2>
+            <input type="text" id="searchRecipe" class="form-control w-25" placeholder="Search recipes...">
+        </div>
+        <div class="row" id="recipeContainer">
+        </div>
+    </section>
+
+    <section id="addRecipe" class="container my-5">
+        <h2 class="fw-bold text-center mb-4">Add Your Recipe</h2>
+        <form id="recipeForm">
+            <div class="mb-3">
+                <input type="text" class="form-control" id="recipeName" placeholder="Recipe Name" required>
+            </div>
+            <div class="mb-3">
+                <input type="url" class="form-control" id="recipeImage" placeholder="Image URL (optional)">
+            </div>
+            <div class="mb-3">
+                <textarea class="form-control" id="recipeIngredients" rows="3" placeholder="Ingredients (comma separated)" required></textarea>
+            </div>
+            <div class="mb-3">
+                <textarea class="form-control" id="recipeDescription" rows="4" placeholder="Recipe Description" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Add Recipe</button>
+        </form>
+    </section>
+
+    <section id="favoritesSection" class="container my-5" style="display: none;">
+        <h2 class="fw-bold text-center mb-4">Your Favorite Recipes ❤️</h2>
+        <div class="row" id="favoritesContainer">
+        </div>
+    </section>
+
+    <div class="modal fade" id="recipeModal" tabindex="-1" aria-labelledby="recipeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recipeModalLabel">Recipe Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="modalImage" class="img-fluid mb-3" alt="Recipe Image">
+                    <h3 id="modalRecipeName"></h3>
+                    <h5>Ingredients:</h5>
+                    <ul id="modalIngredients" class="list-group mb-3"></ul>
+                    <h5>Description:</h5>
+                    <p id="modalDescription"></p>
+
+                    <h5>Reviews:</h5>
+                    <div id="modalReviews" class="mb-3">
+                        <p>No reviews yet. Be the first to add one!</p>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" id="reviewInput" class="form-control" placeholder="Leave a review">
+                        <button class="btn btn-primary" id="submitReview">Submit Review</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="row mb-3">
-      <div class="col-md-6">
-        <label for="spiceLevel" class="form-label">Spice Level:</label>
-        <select class="form-select" id="spiceLevel">
-          <option value="">Any</option>
-          <option value="Mild">Mild</option>
-          <option value="Medium">Medium</option>
-          <option value="Spicy">Spicy</option>
-        </select>
-      </div>
-      <div class="col-md-6">
-        <label for="dietType" class="form-label">Dietary Preference:</label>
-        <select class="form-select" id="dietType">
-          <option value="">Any</option>
-          <option value="Vegetarian">Vegetarian</option>
-          <option value="Non-Vegetarian">Non-Vegetarian</option>
-          <option value="Vegan">Vegan</option>
-        </select>
-      </div>
+    <div class="modal fade" id="editRecipeModal" tabindex="-1" aria-labelledby="editRecipeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editRecipeModalLabel">Edit Recipe</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="editRecipeName" class="form-control mb-3" placeholder="Recipe Name">
+                    <input type="url" id="editRecipeImage" class="form-control mb-3" placeholder="Image URL">
+                    <textarea id="editRecipeIngredients" class="form-control mb-3" rows="3" placeholder="Ingredients (comma separated)"></textarea>
+                    <textarea id="editRecipeDescription" class="form-control mb-3" rows="4" placeholder="Recipe Description"></textarea>
+                    <button id="saveEditedRecipeBtn" class="btn btn-primary w-100">Save Changes</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <button class="btn btn-primary mb-4" onclick="searchRecipes()">Search Recipes</button>
+    <footer class="bg-primary text-white text-center py-3">
+        <p>&copy; 2025 Traditional Nepali Recipe Generator | Made by Sanskriti Acharya</p>
+    </footer>
 
-    <div id="recipeResults" class="row"></div>
-
-    <hr />
-    <h3>Submit Your Family Recipe</h3>
-    <form id="recipeForm">
-      <input type="text" class="form-control mb-2" id="newName" placeholder="Recipe Name" required/>
-      <textarea class="form-control mb-2" id="newIngredients" placeholder="Ingredients (comma-separated)" required></textarea>
-      <input type="text" class="form-control mb-2" id="newSpice" placeholder="Spice Level (Mild, Medium, Spicy)" required/>
-      <input type="text" class="form-control mb-2" id="newDiet" placeholder="Diet Type (Vegetarian, Non-Vegetarian, Vegan)" required/>
-      <input type="url" class="form-control mb-2" id="newVideo" placeholder="YouTube Video URL" required/>
-      <button class="btn btn-success">Submit Recipe</button>
-    </form>
-  </div>
-
-  <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>
